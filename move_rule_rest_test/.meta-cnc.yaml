@@ -1,5 +1,5 @@
-name: move_rule_rest
-label: Move security rule
+name: move_rule_rest_test2
+label: Move security rule test
 
 description: |
   This skillet demonstrates a simple REST api call to move a firewall rule
@@ -13,6 +13,9 @@ labels:
     - Configure
     - PANOS
 
+# variables define the things an operator may customize in this skillet. Things like DNS servers, NTP addresses, etc
+# may be customized for each deployment. Each variable will be rendered as a form field in the panhandler application
+variables:
 variables:
   - name: TARGET_IP
     description: Host
@@ -57,9 +60,7 @@ snippets:
       - name: api_key
         capture_pattern: result/key
   - name: move_rule
-    path: https://{{ TARGET_IP }}/api/?type=config&action=move&xpath=/config/devices/entry/vsys/entry[@name='vsys1']/rulebase/security/rules/entry[@name='{{ rule_name }}']&where={{ where }}{%- if where == 'before' or where == 'after' %}&dst={{ ref_rule }}{% endif %}&key={{ api_key }}
+    path: https://{{ TARGET_IP }}/api/?type=config&action=move&xpath=/config/devices/entry/vsys/entry[@name='vsys1']/rulebase/security/rules/entry[@name='{{ rule_name }}']&where={{ where }}{%- if (where == 'before' or where == 'after' ) %}&dst={{ ref_rule }}{% endif %}&key={{ api_key }}
     output_type: xml
-    #outputs:
-    #  - name: profileName
-    #    capture_pattern: result/{{ profile }}
+
 
