@@ -17,15 +17,6 @@ labels:
 
 # variables section
 variables:
-  - name: start_value
-    description: first tunnel interface number
-    default: 1
-    type_hint: number
-
-  - name: end_value
-    description: last tunnel interface number
-    default: 100
-    type_hint: number
 
   - name: interface_list
     description: loop list
@@ -35,6 +26,7 @@ variables:
       - 10
       - 100
       - 600
+
     type_hint: list
 
 # ---------------------------------------------------------------------
