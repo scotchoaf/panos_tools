@@ -1,31 +1,41 @@
 # skillet preamble information used by panhandler
 # ---------------------------------------------------------------------
 # unique snippet name
-name: cdl_global_config_panos
+name: generate_tunnel_interfaces_with_loops
 # label used for menu selection
-label: Cortex Data Lake global configuration
-description: Enable Cortex Data Lake (CDL) with EAL and associated region. Also configures CDL for system and config logs
-type: panos
+label: Create large output of repetitive set commands
+description: show the use of jinja loops to crank out lots of set commands
+type: template
 
 # grouping of like snippets for dynamic menu creation in panhandler
 labels:
   collection:
-    - CDL
+    - test
 
 # ---------------------------------------------------------------------
 # end of preamble section
 
 # variables section
 variables:
-  - name: cdl_region
-    description: region assigned to Cortex Data Lake instance
-    default: americas
-    type_hint: dropdown
-    dd_list:
-      - key: americas
-        value: americas
-      - key: europe
-        value: europe
+  - name: start_value
+    description: first tunnel interface number
+    default: 1
+    type_hint: number
+
+  - name: end_value
+    description: last tunnel interface number
+    default: 100
+    type_hint: number
+
+  - name: interface_list
+    description: loop list
+    default:
+      - 1
+      - 5
+      - 10
+      - 100
+      - 600
+    type_hint: list
 
 # ---------------------------------------------------------------------
 # end of variables section
@@ -34,29 +44,8 @@ variables:
 # ---------------------------------------------------------------------
 snippets:
 
-  - name: cdl_global_config
-    xpath: /config/devices/entry[@name='localhost.localdomain']/deviceconfig/setting/logging
-    element: |-
-      <enhanced-application-logging>
-        <enable>yes</enable>
-      </enhanced-application-logging>
-      <log-suppression>no</log-suppression>
-      <logging-service-forwarding>
-        <enable>yes</enable>
-        <logging-service-regions>{{ cdl_region }}</logging-service-regions>
-      </logging-service-forwarding>
-
-  - name: cdl_config_logging
-    xpath: /config/shared/log-settings/config/match-list/entry[@name='CDL_log_forwarding']
-    element: |-
-      <filter>All Logs</filter>
-      <send-to-panorama>yes</send-to-panorama>
-
-  - name: cdl_system_logging
-    xpath: /config/shared/log-settings/system/match-list/entry[@name='CDL_log_forwarding']
-    element: |-
-      <filter>All Logs</filter>
-      <send-to-panorama>yes</send-to-panorama>
+  - name: set_commands
+    file: set_commands.conf
 
 # ---------------------------------------------------------------------
 # end of snippets section
